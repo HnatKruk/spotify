@@ -6,9 +6,11 @@ import { Grid, Button, TextField } from '@mui/material'
 import axios from 'axios'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
+import { CloudUpload } from '@mui/icons-material';
+import { styled } from '@mui/material/styles';
 
-const Create = () => {
-  const [activeStep, setActiveStep] = useState(0)
+const Download = () => {
+  const [activeStep, setActiveStep] = useState(1)
   const [picture, setPicture] = useState(null)
   const [audio, setAudio] = useState(null)
   const name = useInput('')
@@ -16,6 +18,7 @@ const Create = () => {
   const text = useInput('')
   const router = useRouter()
 
+  console.log(picture)
   const next = () => {
     if (activeStep !== 2) {
       setActiveStep((prev) => prev + 1)
@@ -35,6 +38,18 @@ const Create = () => {
   const back = () => {
     setActiveStep((prev) => prev - 1)
   }
+
+  const VisuallyHiddenInput = styled('input')({
+    clip: 'rect(0 0 0 0)',
+    clipPath: 'inset(50%)',
+    height: 1,
+    overflow: 'hidden',
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    whiteSpace: 'nowrap',
+    width: 1,
+  });
 
   return (
     <MainLayout>
@@ -61,14 +76,30 @@ const Create = () => {
           </Grid>
         )}
         {activeStep === 1 && (
-          <FileUpload setFile={setPicture} accept={'image/*'}>
-            <Button>Download picture</Button>
-          </FileUpload>
+          <>
+            <Button component="label" variant="contained" startIcon={<CloudUpload />} style={{
+              display: 'flex',
+              width: 'fit-content',
+              margin: '0 auto',
+            }}>
+              Upload picture
+              <VisuallyHiddenInput type="file" accept={'image/*'} onChange={(e) => setPicture(e.target.files[0])}/>
+            </Button>
+            <p>{picture?.name || ''}</p>
+          </>
         )}
         {activeStep === 2 && (
-          <FileUpload setFile={setAudio} accept={'audio/*'}>
-            <Button>Download track</Button>
-          </FileUpload>
+           <>
+            <Button component="label" variant="contained" startIcon={<CloudUpload />} style={{
+              display: 'flex',
+              width: 'fit-content',
+              margin: '0 auto',
+            }}>
+              Upload audio
+              <VisuallyHiddenInput type="file" accept={'audio/*'} onChange={(e) => setAudio(e.target.files[0])}/>
+            </Button>
+            <p>{audio?.name || ''}</p>
+          </>
         )}
       </StepWrapper>
       <Grid container justifyContent='space-between'>
@@ -79,4 +110,4 @@ const Create = () => {
   )
 }
 
-export default Create
+export default Download

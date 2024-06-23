@@ -6,21 +6,31 @@ import styles from '../styles/TrackItem.module.scss'
 import { useRouter } from 'next/router';
 import { useActions } from '@/hooks/useActions';
 import { useTypedSelector } from '@/hooks/useTypedSelector';
+import { deleteTrack, fetchTracks } from '@/store/actions-creators/track'
+import { useDispatch } from 'react-redux';
+import { NextThunkDispatch } from '@/store';
 
 interface TrackItemProps {
   track: ITrack;
   active?: boolean;
 }
 
-const TrackItem: FC<TrackItemProps> = ({ track, active = false }) => {
+const TrackItem: FC<TrackItemProps> = ({ track }) => {
   const router = useRouter()
-  const { pause, volume, duration, currentTime } = useTypedSelector((state) => state.player)
+  const dispatch = useDispatch() as NextThunkDispatch
+  const { pause, volume, duration, currentTime, active = false } = useTypedSelector((state) => state.player)
   const { playTrack, pauseTrack, setVolume, setActiveTrack, setCurrentTime, setDuration } = useActions()
 
   const play = (e: any) => {
     e.stopPropagation()
     setActiveTrack(track)
     playTrack()
+  }
+
+  const handleDelete = async (e) => {
+    e.stopPropagation()
+    await dispatch(deleteTrack(track._id))
+    await dispatch(fetchTracks())
   }
 
   return (
@@ -34,7 +44,7 @@ const TrackItem: FC<TrackItemProps> = ({ track, active = false }) => {
         <div style={{ fontSize: 12, color: 'gray' }}>{track.artist}</div>
       </Grid>
       {active && <div>02:22 / 03:11</div>}
-      <IconButton style={{ marginLeft: 'auto' }} onClick={(e) => e.stopPropagation()}>
+      <IconButton style={{ marginLeft: 'auto' }} onClick={(e) => handleDelete(e)}>
         <Delete/>
       </IconButton>
     </Card>

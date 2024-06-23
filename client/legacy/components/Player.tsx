@@ -15,6 +15,8 @@ interface PlayerProps {
 const Player: FC<PlayerProps> = ({ }) => {
 
   const { pause, volume, duration, active, currentTime } = useTypedSelector((state) => state.player)
+  console.log(active)
+
   const { playTrack, pauseTrack, setVolume, setActiveTrack, setCurrentTime, setDuration } = useActions()
 
   useEffect(() => {

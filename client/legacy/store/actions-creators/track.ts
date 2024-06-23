@@ -23,3 +23,15 @@ export const searchTracks = (query: string) => {
     }
   }
 }
+
+export const deleteTrack = (id: string) => {
+  return async (dispatch: Dispatch<TrackAction>) => {
+    try {
+      const response = await axios.delete(`http://localhost:4000/tracks/${id}`)
+      console.log(response)
+      dispatch({ type: TrackActionTypes.DELETE_TRACK })
+    } catch (error) {
+      dispatch({ type: TrackActionTypes.DELETE_TRACK_ERROR, payload: `Error fetch tracks: ${error}` })
+    }
+  }
+}

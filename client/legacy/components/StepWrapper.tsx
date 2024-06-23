@@ -20,7 +20,13 @@ const StepWrapper: FC<StepWrapperProps> = ({ activeStep, children }) => {
         </Step>)}
       </Stepper>
       <Grid container justifyContent='center' style={{ margin: '70px 0', height: 270 }}>
-        <Card style={{ width: 600 }}>
+        <Card style={{
+          width: 600,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}>
           {children}
         </Card>
       </Grid>

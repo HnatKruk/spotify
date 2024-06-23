@@ -1,7 +1,7 @@
 import { ITrack } from '../../types/track'
 import { Box, Button, Card, Grid, TextField } from '@mui/material'
 import { useRouter } from 'next/router'
-import React, { ChangeEvent, useState } from 'react'
+import React, { ChangeEvent, useEffect, useState } from 'react'
 import MainLayout from '../../layouts/MainLayout'
 import TrackList from '@/components/TrackList'
 import { useTypedSelector } from '@/hooks/useTypedSelector'
@@ -19,13 +19,11 @@ const Tracks = () => {
 
   const search = async (e: ChangeEvent<HTMLInputElement>) => {
     setQuery(e.target.value)
-    if (timer) {
-      clearTimeout(timer)
-    }
-    setTimeout(async () => {
-      await dispatch(searchTracks(query))
-    }, 500)
   }
+
+  useEffect(() => {
+    dispatch(searchTracks(query))
+  }, [query, dispatch]);
 
   if (error) {
     return <MainLayout>
@@ -40,13 +38,14 @@ const Tracks = () => {
           <Box p={2}>
             <Grid container justifyContent='space-between'>
               <h1>Tracks list</h1>
-              <Button onClick={() => router.push('/tracks/create')}>Download</Button>
             </Grid>
           </Box>
           <TextField
+            style={{ padding: '0 30px', boxSizing: 'border-box' }}
             fullWidth
             value={query}
-            onChange={search}
+            onChange={(e) => search(e)}
+            placeholder='Search'
           />
           <TrackList tracks={tracks}/>
         </Card>
@@ -65,9 +64,3 @@ Tracks.getInitialProps = wrapper.getInitialPageProps(store => async () => {
     console.error('Error fetching tracks:', error);
   }
 });
-
-
-// export const getServerSideProps = wrapper.getServerSideProps(async ({store}) => {
-//   const dispatch = store.dispatch as NextThunkDispatch
-//   await dispatch(await fetchTracks())
-// })

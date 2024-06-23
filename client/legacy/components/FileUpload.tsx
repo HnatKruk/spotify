@@ -13,7 +13,15 @@ const FileUpload: FC<FileUploadProps> = ({ setFile, accept, children }) => {
     setFile(e.target.files[0])
   }
   return (
-    <div onClick={() => ref.current?.click()}>
+    <div
+      onClick={() => ref.current?.click()}
+      style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignContent: 'center',
+        height: '100%'
+      }}
+    >
       <input
         type='file'
         accept={accept}
